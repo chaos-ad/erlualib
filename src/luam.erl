@@ -92,12 +92,19 @@ pushterm(L, Args) when is_tuple(Args)   ->
 pushterm(L, Args) when is_list(Args) ->
     lua:createtable(L, length(Args), 0),
     TPos = lua:gettop(L),
-    Fun = fun({K, V}) ->
+    Fun =
+    fun({K, V}, N) ->
             pushterm(L, K),
             pushterm(L, V),
-            lua:settable(L, TPos)
+            lua:settable(L, TPos),
+            N+1;
+        (V, N) ->
+            pushterm(L, N),
+            pushterm(L, V),
+            lua:settable(L, TPos),
+            N+1
     end,
-    lists:foreach(Fun, Args).
+    lists:foldl(Fun, 1, Args).
 
 %% @doc Pop N results from the stack and return result tuple. [-N, +0]
 -spec pop_results(lua:lua(), pos_integer()) -> tuple().
