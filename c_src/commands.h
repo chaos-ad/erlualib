@@ -143,3 +143,4 @@
 
 #define ATOM_OK driver_mk_atom("ok")
 #define ATOM_THROW driver_mk_atom("throw")
+#define ATOM_ERLUALIB driver_mk_atom("erlualib")

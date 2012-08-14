@@ -9,11 +9,10 @@ command(#lua{port=Port}, Data) ->
 
 receive_valued_response() ->
     receive
-        ok -> ok;
-        {ok, Str} -> Str;
-        {throw, Throw} -> throw(Throw);
-        Other -> throw({unknown_return, Other})
+        {erlualib, ok} -> ok;
+        {erlualib, {ok, Str}} -> Str;
+        {erlualib, {throw, Throw}} -> throw(Throw);
+        {erlualib, Other} -> throw({unknown_return, Other})
     after ?STD_TIMEOUT ->
-            error(timeout)
+        error(timeout)
     end.
-

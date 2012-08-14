@@ -67,9 +67,11 @@ erl_lua_objlen(lua_drv_t *driver_data, char *buf, int index)
 #endif
 
   ErlDrvTermData spec[] = {
+      ERL_DRV_ATOM, ATOM_ERLUALIB,
         ERL_DRV_ATOM,   ATOM_OK,
         ERL_DRV_INT, (ErlDrvTermData) size,
-        ERL_DRV_TUPLE,  2
+        ERL_DRV_TUPLE, 2,
+      ERL_DRV_TUPLE, 2
   };
   driver_output_term(driver_data->port, spec, sizeof(spec) / sizeof(spec[0]));
 }
@@ -92,9 +94,11 @@ erl_lua_next(lua_drv_t *driver_data, char *buf, int index)
   ret = lua_next(driver_data->L, i);
 
   ErlDrvTermData spec[] = {
+      ERL_DRV_ATOM, ATOM_ERLUALIB,
         ERL_DRV_ATOM,   ATOM_OK,
         ERL_DRV_INT, (ErlDrvTermData) ret,
-        ERL_DRV_TUPLE,  2
+        ERL_DRV_TUPLE, 2,
+      ERL_DRV_TUPLE, 2
   };
   driver_output_term(driver_data->port, spec, sizeof(spec) / sizeof(spec[0]));
 }
@@ -146,9 +150,11 @@ erl_lua_gettop(lua_drv_t *driver_data, char *buf, int index)
   size = lua_gettop(driver_data->L);
 
   ErlDrvTermData spec[] = {
-        ERL_DRV_ATOM,   ATOM_OK,
-        ERL_DRV_INT, (ErlDrvTermData) size,
-        ERL_DRV_TUPLE,  2
+        ERL_DRV_ATOM, ATOM_ERLUALIB,
+          ERL_DRV_ATOM,   ATOM_OK,
+          ERL_DRV_INT, (ErlDrvTermData) size,
+          ERL_DRV_TUPLE, 2,
+        ERL_DRV_TUPLE, 2
   };
   driver_output_term(driver_data->port, spec, sizeof(spec) / sizeof(spec[0]));
 }
@@ -272,9 +278,11 @@ erl_lua_toboolean(lua_drv_t *driver_data, char *buf, int index)
   res = lua_toboolean(driver_data->L, i);
 
   ErlDrvTermData spec[] = {
-        ERL_DRV_ATOM,   ATOM_OK,
-        ERL_DRV_ATOM, driver_mk_atom(res ? "true" : "false"),
-        ERL_DRV_TUPLE,  2
+        ERL_DRV_ATOM, ATOM_ERLUALIB,
+          ERL_DRV_ATOM,   ATOM_OK,
+          ERL_DRV_ATOM, driver_mk_atom(res ? "true" : "false"),
+          ERL_DRV_TUPLE, 2,
+        ERL_DRV_TUPLE, 2
   };
   driver_output_term(driver_data->port, spec, sizeof(spec) / sizeof(spec[0]));
 }
@@ -290,9 +298,11 @@ erl_lua_tointeger(lua_drv_t *driver_data, char *buf, int index)
   res = lua_tointeger(driver_data->L, i);
 
   ErlDrvTermData spec[] = {
-        ERL_DRV_ATOM,   ATOM_OK,
-        ERL_DRV_INT, (ErlDrvTermData) res,
-        ERL_DRV_TUPLE,  2
+        ERL_DRV_ATOM, ATOM_ERLUALIB,
+          ERL_DRV_ATOM,   ATOM_OK,
+          ERL_DRV_INT, (ErlDrvTermData) res,
+          ERL_DRV_TUPLE, 2,
+        ERL_DRV_TUPLE, 2
   };
   driver_output_term(driver_data->port, spec, sizeof(spec) / sizeof(spec[0]));
 }
@@ -309,9 +319,11 @@ erl_lua_tolstring(lua_drv_t *driver_data, char *buf, int index)
   str = lua_tolstring(driver_data->L, i, &len);
 
   ErlDrvTermData spec[] = {
-        ERL_DRV_ATOM,   ATOM_OK,
-        ERL_DRV_BUF2BINARY, (ErlDrvTermData) str, len,
-        ERL_DRV_TUPLE,  2
+        ERL_DRV_ATOM, ATOM_ERLUALIB,
+          ERL_DRV_ATOM,   ATOM_OK,
+          ERL_DRV_BUF2BINARY, (ErlDrvTermData) str, len,
+          ERL_DRV_TUPLE, 2,
+        ERL_DRV_TUPLE, 2
   };
   driver_output_term(driver_data->port, spec, sizeof(spec) / sizeof(spec[0]));
 }
@@ -349,9 +361,11 @@ erl_lua_tonumber(lua_drv_t *driver_data, char *buf, int index)
   }
 
   ErlDrvTermData spec[] = {
-        ERL_DRV_ATOM,   ATOM_OK,
-        ERL_DRV_BUF2BINARY, (ErlDrvTermData) eibuf, size,
-        ERL_DRV_TUPLE,  2
+        ERL_DRV_ATOM, ATOM_ERLUALIB,
+          ERL_DRV_ATOM,   ATOM_OK,
+          ERL_DRV_BUF2BINARY, (ErlDrvTermData) eibuf, size,
+          ERL_DRV_TUPLE, 2,
+        ERL_DRV_TUPLE, 2
   };
   driver_output_term(driver_data->port, spec, sizeof(spec) / sizeof(spec[0]));
   free(eibuf);
@@ -379,9 +393,11 @@ erl_lua_type(lua_drv_t *driver_data, char *buf, int index)
   lua_t = lua_type(driver_data->L, i);
 
   ErlDrvTermData spec[] = {
-        ERL_DRV_ATOM,   ATOM_OK,
-        ERL_DRV_INT, (ErlDrvTermData) lua_t,
-        ERL_DRV_TUPLE,  2
+        ERL_DRV_ATOM, ATOM_ERLUALIB,
+          ERL_DRV_ATOM,   ATOM_OK,
+          ERL_DRV_INT, (ErlDrvTermData) lua_t,
+          ERL_DRV_TUPLE, 2,
+        ERL_DRV_TUPLE, 2
   };
   driver_output_term(driver_data->port, spec, sizeof(spec) / sizeof(spec[0]));
 }
@@ -415,19 +431,23 @@ erl_luam_multipcall(lua_drv_t *driver_data, char *buf, int index)
   if(lua_pcall(driver_data->L, args, LUA_MULTRET, 0) == 0) {
       ret_results = lua_gettop(driver_data->L) - level;
       ErlDrvTermData spec[] = {
-          ERL_DRV_ATOM,   ATOM_OK,
-          ERL_DRV_INT, (ErlDrvTermData) ret_results,
-          ERL_DRV_TUPLE,  2
+          ERL_DRV_ATOM, ATOM_ERLUALIB,
+            ERL_DRV_ATOM,   ATOM_OK,
+            ERL_DRV_INT, (ErlDrvTermData) ret_results,
+            ERL_DRV_TUPLE, 2,
+          ERL_DRV_TUPLE, 2
       };
       driver_output_term(driver_data->port,spec,sizeof(spec)/sizeof(spec[0]));
   } else {
       const char *err = lua_tostring(driver_data->L, -1);
       ErlDrvTermData spec[] = {
-          ERL_DRV_ATOM,   ATOM_THROW,
-            ERL_DRV_ATOM, driver_mk_atom("lua_error"),
-            ERL_DRV_STRING, (ErlDrvTermData) err, strlen(err),
-            ERL_DRV_TUPLE,  2,
-          ERL_DRV_TUPLE,  2
+          ERL_DRV_ATOM, ATOM_ERLUALIB,
+            ERL_DRV_ATOM,   ATOM_THROW,
+              ERL_DRV_ATOM, driver_mk_atom("lua_error"),
+              ERL_DRV_STRING, (ErlDrvTermData) err, strlen(err),
+              ERL_DRV_TUPLE, 2,
+            ERL_DRV_TUPLE, 2,
+          ERL_DRV_TUPLE, 2
       };
       driver_output_term(driver_data->port,spec,sizeof(spec)/sizeof(spec[0]));
   }
@@ -446,17 +466,21 @@ erl_luam_maybe_atom(lua_drv_t *driver_data, char *buf, int index)
   if (is_atom) {
       atom = (char*)lua_touserdata(driver_data->L, i);
       ErlDrvTermData spec[] = {
-          ERL_DRV_ATOM, ATOM_OK,
+          ERL_DRV_ATOM, ATOM_ERLUALIB,
             ERL_DRV_ATOM, ATOM_OK,
-            ERL_DRV_ATOM, driver_mk_atom(atom),
-            ERL_DRV_TUPLE,  2,
+              ERL_DRV_ATOM, ATOM_OK,
+              ERL_DRV_ATOM, driver_mk_atom(atom),
+              ERL_DRV_TUPLE, 2,
+            ERL_DRV_TUPLE, 2,
           ERL_DRV_TUPLE, 2
       };
       driver_output_term(driver_data->port, spec, sizeof(spec) / sizeof(spec[0]));
   } else {
       ErlDrvTermData spec[] = {
-          ERL_DRV_ATOM, ATOM_OK,
-          ERL_DRV_ATOM, driver_mk_atom("false"),
+          ERL_DRV_ATOM, ATOM_ERLUALIB,
+            ERL_DRV_ATOM, ATOM_OK,
+            ERL_DRV_ATOM, driver_mk_atom("false"),
+            ERL_DRV_TUPLE, 2,
           ERL_DRV_TUPLE, 2
       };
       driver_output_term(driver_data->port, spec, sizeof(spec) / sizeof(spec[0]));
@@ -473,7 +497,11 @@ erl_lua_no_command(lua_drv_t *driver_data)
 static void
 reply_ok(lua_drv_t *driver_data)
 {
-  ErlDrvTermData spec[] = {ERL_DRV_ATOM, ATOM_OK};
+  ErlDrvTermData spec[] = {
+      ERL_DRV_ATOM, ATOM_ERLUALIB,
+      ERL_DRV_ATOM, ATOM_OK,
+      ERL_DRV_TUPLE, 2
+  };
   driver_output_term(driver_data->port, spec, sizeof(spec) / sizeof(spec[0]));
 }
 
@@ -481,9 +509,11 @@ static void
 reply_throw(lua_drv_t *driver_data, const char *err)
 {
   ErlDrvTermData spec[] = {
-        ERL_DRV_ATOM,   ATOM_THROW,
-        ERL_DRV_STRING, (ErlDrvTermData) err, strlen(err),
-        ERL_DRV_TUPLE,  2
+        ERL_DRV_ATOM, ATOM_ERLUALIB,
+          ERL_DRV_ATOM, ATOM_THROW,
+          ERL_DRV_STRING, (ErlDrvTermData) err, strlen(err),
+          ERL_DRV_TUPLE, 2,
+        ERL_DRV_TUPLE, 2
   };
   driver_output_term(driver_data->port, spec, sizeof(spec) / sizeof(spec[0]));
 }
